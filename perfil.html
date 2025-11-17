@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <img src="imgs/logo.png" alt="Logo">
+    </a>
+    <h1>Perfil do Utilizador</h1>
+  </div>
+  <a href="index.html" class="btn-secondary">← Voltar</a>
+</header>
+
+<main>
+  <section class="perfil-container">
+
+      <div class="perfil-icon">
+        <img src="imgs/ícone.png" alt="Ícone" class="img-fluid" style="max-width: 400px; margin: 0 auto; display: block;">
+      </div>
+
+      <h2 id="perfil-nome"></h2>
+      <p id="perfil-email"></p>
+
+  </section>
+</main>
+
+
+<script>
+// Carregar dados do utilizador logado
+const utilizador = JSON.parse(localStorage.getItem("utilizadorAtivo"));
+
+if (!utilizador) {
+    window.location.href = "login.html";
+}
+
+// Preencher o perfil
+document.getElementById("perfil-nome").textContent =
+    utilizador.nome + " " + utilizador.apelido;
+
+document.getElementById("perfil-email").textContent = utilizador.email;
+</script>
+
+</body>
+</html>
+

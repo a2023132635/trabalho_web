@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de Finanças Pessoais</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+</head>
+
+<body onload="atualizarIndex()">
+
+  <header>
+    <div class="logo">
+      <a href="index.html">
+        <img src="imgs/logo.png" alt="Logo">
+      </a>
+      <h1>Simulador de Finanças Pessoais</h1>
+    </div>
+
+    <div class="auth-buttons">
+      
+      <a href="login.html" class="btn-primary">Entrar</a>
+      <a href="registo.html" class="btn-primary">Registar</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="saldo-section">
+      <button class="btn-light">Saldo Atual: <span id="saldoIndex">€ 0</span></button>
+      <button class="btn-light selected">Poupança: <span id="poupancaIndex">€ 0</span></button>
+      <button class="btn-dark">Dívidas: <span id="dividaIndex">€ 0</span></button>
+    </section>
+
+
+    <section class="acoes">
+      <div class="acoes-grid">
+        <a href="gestao.html" class="btn-action">Gastar</a>
+        <a href="gestao.html" class="btn-action">Poupar</a>
+        <a href="gestao.html" class="btn-action">Investir</a>
+        <a href="gestao.html" class="btn-action">Pagar Dívida</a>
+      </div>
+    </section>
+
+    <div style="margin-top:40px;">
+      <a href="eventos.html" class="btn-dark">Acontecimentos Aleatórios</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-icons">
+      <span>📞</span>
+      <span>❓</span>
+      <span>💬</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

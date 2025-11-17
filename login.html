@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+      <a href="index.html">
+        <img src="imgs/logo.png" alt="Logo">
+      </a>
+      <h1>Iniciar Sessão</h1>
+    </div>
+    <a href="index.html" class="btn-secondary">← Voltar</a>
+</header>
+
+<main>
+    <section class="form-container">
+
+        <h2>Login</h2>
+
+        <form id="loginForm" onsubmit="loginUtilizador(event)">
+            <div class="mb-2">
+                <label for="login-email" class="form-label">Email</label>
+                <input id="login-email" type="email" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="login-password" class="form-label">Palavra-passe</label>
+                <input id="login-password" type="password" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 15px;">Entrar</button>
+        </form>
+
+        <p style="text-align:center; margin-top:12px;">
+            Ainda não tens conta? <a href="registo.html">Registar</a>
+        </p>
+
+    </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
