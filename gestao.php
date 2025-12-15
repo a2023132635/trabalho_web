@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão Mensal - Simulador Financeiro</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <a href="index.php">
+        <img src="imgs/logo.png" alt="Logo">
+      </a>
+      <h1>Gestão Mensal</h1>
+    </div>
+    
+    <div class="auth-buttons">
+      <a href="index.php" class="btn-secondary">← Voltar</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="saldo">
+      <h2>Saldo Atual</h2>
+      <p id="saldo">€ 0</p>
+    </div>
+
+    <div class="acoes">
+      <div class="acao">
+        <h3>Receber Salário</h3>
+        <input type="number" id="valorSalario" placeholder="Introduz o teu salário (€)" />
+        <button onclick="receberSalario()">Receber</button>
+      </div>
+
+      <div class="acao">
+        <h3>Gastar</h3>
+        <button onclick="mostrarInput('gasto')">Gastar</button>
+        <div id="inputGasto" class="input-area">
+          <input type="number" id="valorGasto" placeholder="Valor a gastar (€)">
+          <button onclick="gastar()">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="acao">
+        <h3>Poupar</h3>
+        <button onclick="mostrarInput('poupar')">Poupar</button>
+        <div id="inputPoupar" class="input-area">
+          <input type="number" id="valorPoupar" placeholder="Valor a poupar (€)">
+          <button onclick="poupar()">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="acao">
+        <h3>Pagar Dívida</h3>
+        <button onclick="mostrarInput('divida')">Pagar</button>
+        <div id="inputDivida" class="input-area">
+          <input type="number" id="valorDivida" placeholder="Valor a pagar (€)">
+          <button onclick="pagarDivida()">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="acao">
+        <h3>Investir</h3>
+        <button onclick="mostrarInput('investir')">Investir</button>
+        <div id="inputInvestir" class="input-area">
+          <input type="number" id="valorInvestir" placeholder="Valor a investir (€)">
+          <button onclick="investir()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mensagem" id="mensagem">
+      Escolhe uma ação e introduz o valor pretendido.
+    </div>
+
+    <div class="center-buttons">
+      <button onclick="guardarProgressoBD()">Guardar Progresso</button>
+      <button onclick="resetFinancas()">Reset</button>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

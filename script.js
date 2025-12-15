@@ -1,7 +1,16 @@
-let saldo = parseFloat(localStorage.getItem("saldo")) || 0;
-let poupanca = parseFloat(localStorage.getItem("poupanca")) || 0;
-let divida = parseFloat(localStorage.getItem("divida")) || 0;
+// VARIÁVEIS GLOBAIS
 
+let saldo = 0;
+let poupanca = 0;
+let divida = 0;
+
+// LOCALSTORAGE
+
+function carregarValores() {
+    saldo = parseFloat(localStorage.getItem("saldo")) || 0;
+    poupanca = parseFloat(localStorage.getItem("poupanca")) || 0;
+    divida = parseFloat(localStorage.getItem("divida")) || 0;
+}
 
 function guardarValores() {
     localStorage.setItem("saldo", saldo);
@@ -9,102 +18,150 @@ function guardarValores() {
     localStorage.setItem("divida", divida);
 }
 
-function atualizarSaldoGestao() {
-    const elemento = document.getElementById("saldo");
-    if (elemento) elemento.innerText = `€ ${saldo.toFixed(2)}`;
+function carregarSaldoEventos() {
+    carregarValores(); // lê do localStorage
+
+    const el = document.getElementById("saldoEventos");
+    if (el) el.innerText = `€ ${saldo.toFixed(2)}`;
+    
 }
 
+
+// ATUALIZAÇÃO DO UI
 
 function atualizarIndex() {
-    document.getElementById("saldoIndex").innerText = `€ ${saldo.toFixed(2)}`;
-    document.getElementById("poupancaIndex").innerText = `€ ${poupanca.toFixed(2)}`;
-    document.getElementById("dividaIndex").innerText = `€ ${divida.toFixed(2)}`;
+  const s = document.getElementById("saldoIndex");
+  const p = document.getElementById("poupancaIndex");
+  const d = document.getElementById("dividaIndex");
+
+  if (s) s.innerText = `€ ${saldo.toFixed(2)}`;
+  if (p) p.innerText = `€ ${poupanca.toFixed(2)}`;
+  if (d) d.innerText = `€ ${divida.toFixed(2)}`;
 }
 
-function carregarSaldoEventos() {
-    document.getElementById("saldoEventos").innerText = `€ ${saldo.toFixed(2)}`;
+function atualizarSaldoGestao() {
+    const el = document.getElementById("saldo");
+    if (el) el.innerText = `€ ${saldo.toFixed(2)}`;
 }
+
+function atualizarSaldoEventos() {
+    const el = document.getElementById("saldoEventos");
+    if (el) el.innerText = `€ ${saldo.toFixed(2)}`;
+}
+
+
+// REGISTAR HISTORICO
+
+function registarHistorico(tipo, valor) {
+  fetch("sistema/registar_historico.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `tipo=${encodeURIComponent(tipo)}&valor=${valor}&saldo=${saldo}`
+  });
+}
+
+
+
+// AÇÕES FINANCEIRAS
 
 function mostrarInput(tipo) {
   const inputs = ["inputGasto","inputPoupar","inputDivida","inputInvestir"];
-  inputs.forEach(id => document.getElementById(id).style.display = "none");
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
 
-  document.getElementById(`input${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`).style.display = "block";
+  const alvo = document.getElementById(
+    `input${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`
+  );
+  if (alvo) alvo.style.display = "block";
 }
 
-
 function receberSalario() {
-  let valor = parseFloat(document.getElementById("valorSalario").value);
-  if (isNaN(valor) || valor <= 0) return;
+    const valor = parseFloat(document.getElementById("valorSalario").value);
+    if (isNaN(valor) || valor <= 0) return;
 
-  saldo += valor;
-  guardarValores();
-  atualizarSaldoGestao();
+    saldo += valor;
+    guardarValores();
+    atualizarSaldoGestao();
+    atualizarIndex();
 
-  document.getElementById("mensagem").innerText = `Recebeste €${valor}.`;
-  document.getElementById("valorSalario").value = "";
+    registarHistorico("Recebeu salário", valor);
+     
+    document.getElementById("mensagem").innerText = `Recebeste €${valor}.`;
+    document.getElementById("valorSalario").value = "";
 }
 
 function gastar() {
-  let valor = parseFloat(document.getElementById("valorGasto").value);
-  if (isNaN(valor) || valor <= 0 || valor > saldo) return;
+    const valor = parseFloat(document.getElementById("valorGasto").value);
+    if (isNaN(valor) || valor <= 0 || valor > saldo) return;
 
-  saldo -= valor;
-  guardarValores();
-  atualizarSaldoGestao();
+    saldo -= valor;
+    guardarValores();
+    atualizarSaldoGestao();
+    atualizarIndex();
 
-  document.getElementById("mensagem").innerText = `Gastaste €${valor}.`;
-  document.getElementById("inputGasto").style.display = "none";
+    registarHistorico("Gasto", -valor);
+
+    document.getElementById("mensagem").innerText = `Gastaste €${valor}.`;
+    document.getElementById("inputGasto").style.display = "none";
 }
 
 function poupar() {
-  let valor = parseFloat(document.getElementById("valorPoupar").value);
-  if (isNaN(valor) || valor <= 0 || valor > saldo) return;
+    const valor = parseFloat(document.getElementById("valorPoupar").value);
+    if (isNaN(valor) || valor <= 0 || valor > saldo) return;
 
-  saldo -= valor;
-  poupanca += valor;
-  
-  guardarValores();
-  atualizarSaldoGestao();
+    saldo -= valor;
+    poupanca += valor;
+    guardarValores();
+    atualizarSaldoGestao();
+    atualizarIndex();
 
-  document.getElementById("mensagem").innerText = `Poupaste €${valor}.`;
-  document.getElementById("inputPoupar").style.display = "none";
+    registarHistorico("Poupança", -valor);
+
+    document.getElementById("mensagem").innerText = `Poupaste €${valor}.`;
+    document.getElementById("inputPoupar").style.display = "none";
 }
 
 function pagarDivida() {
-  let valor = parseFloat(document.getElementById("valorDivida").value);
-  if (isNaN(valor) || valor <= 0 || valor > saldo) return;
+    const valor = parseFloat(document.getElementById("valorDivida").value);
+    if (isNaN(valor) || valor <= 0 || valor > saldo) return;
 
-  saldo -= valor;
-  divida -= valor;
+    saldo -= valor;
+    divida -= valor;
+    guardarValores();
+    atualizarSaldoGestao();
+    atualizarIndex();
 
-  guardarValores();
-  atualizarSaldoGestao();
+    registarHistorico("Pagamento de dívida", -valor);
 
-  document.getElementById("mensagem").innerText = `Pagaste €${valor}.`;
-  document.getElementById("inputDivida").style.display = "none";
+    document.getElementById("mensagem").innerText = `Pagaste €${valor}.`;
+    document.getElementById("inputDivida").style.display = "none";
 }
 
 function investir() {
-  let valor = parseFloat(document.getElementById("valorInvestir").value);
-  if (isNaN(valor) || valor <= 0 || valor > saldo) return;
+    const valor = parseFloat(document.getElementById("valorInvestir").value);
+    if (isNaN(valor) || valor <= 0 || valor > saldo) return;
 
-  saldo -= valor;
+    saldo -= valor;
+    guardarValores();
+    atualizarSaldoGestao();
+    atualizarIndex();
 
-  guardarValores();
-  atualizarSaldoGestao();
+    registarHistorico("Investimento", -valor);
 
-  document.getElementById("mensagem").innerText = `Investiste €${valor}.`;
-  document.getElementById("inputInvestir").style.display = "none";
+    document.getElementById("mensagem").innerText = `Investiste €${valor}.`;
+    document.getElementById("inputInvestir").style.display = "none";
 }
 
+// EVENTOS
 
 function gerarEvento() {
   const eventos = [
-    { nome: "Horas extra no trabalho", valor: 150 },
-    { nome: "Despesa hospitalar inesperada", valor: -150 },
-    { nome: "Subsídio Extra", valor: 500 },
-    { nome: "Problema automóvel inesperado", valor: -200 }
+    { nome: "Horas extra no trabalho", valor: 350 },
+    { nome: "Ganho de uma aposta", valor: 150 },
+    { nome: "Problema automóvel inesperado", valor: -425 },
+    { nome: "Viagem", valor: -500 },
   ];
 
   const evento = eventos[Math.floor(Math.random() * eventos.length)];
@@ -118,53 +175,76 @@ function gerarEvento() {
   document.getElementById("resultadoEvento").innerText =
     `Novo saldo: € ${saldo.toFixed(2)}`;
 
-  document.getElementById("saldoEventos").innerText = `€ ${saldo.toFixed(2)}`;
+  atualizarSaldoEventos();
+
+  registarHistorico(evento.nome, evento.valor);
 }
 
 
 
-function registarUtilizador(event) {
-    event.preventDefault();
+// GUARDAR NA BASE DE DADOS
 
-    const email = document.getElementById("f-email").value;
-    const nome = document.getElementById("f-nome").value;
-    const apelido = document.getElementById("f-apelido").value;
-    const password = document.getElementById("f-password").value;
+function guardarProgressoBD() {
+    fetch("sistema/guardar_financas.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `saldo=${saldo}&poupanca=${poupanca}&divida=${divida}`
+    })
+    .then(r => r.text())
+    .then(res => {
+        if (res.trim() === "ok") {
+            alert("Progresso guardado com sucesso!");
+        } 
+        else {
+            alert("Erro ao guardar: " + res);
+        }
+    });
+}
 
-    const utilizador = {
-        email: email,
-        nome: nome,
-        apelido: apelido,
-        password: password
-    };
+// RESET TOTAL
 
-    localStorage.setItem("utilizadorRegistado", JSON.stringify(utilizador));
+function resetFinancas() {
+    if (!confirm("Queres mesmo resetar tudo para 0?")) return;
 
-    window.location.href = "login.html";
+    saldo = 0;
+    poupanca = 0;
+    divida = 0;
+
+    guardarValores();
+    atualizarIndex();
+    atualizarSaldoGestao();
+    atualizarSaldoEventos();
+
+    fetch("sistema/reset_financas.php", { method: "POST" });
 }
 
 
+// INICIALIZAÇÃO (UMA VEZ APENAS)
 
-function loginUtilizador(event) {
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("sistema/carregar_financas.php")
+    .then(r => r.json())
+    .then(data => {
+      saldo = parseFloat(data.saldo) || 0;
+      poupanca = parseFloat(data.poupanca) || 0;
+      divida = parseFloat(data.divida) || 0;
 
-    const emailLogin = document.getElementById("login-email").value;
-    const passwordLogin = document.getElementById("login-password").value;
+      guardarValores();
+      atualizarIndex();
+      atualizarSaldoGestao();
+      atualizarSaldoEventos();
+    })
+    .catch(() => {
+      carregarValores();
+      atualizarIndex();
+      atualizarSaldoGestao();
+      atualizarSaldoEventos();
+    });
+});
 
-    const utilizadorGuardado = JSON.parse(localStorage.getItem("utilizadorRegistado"));
 
-    if (!utilizadorGuardado) {
-        alert("Nenhum utilizador registado.");
-        return;
-    }
 
-    if (emailLogin === utilizadorGuardado.email &&
-        passwordLogin === utilizadorGuardado.password) {
 
-        localStorage.setItem("utilizadorAtivo", JSON.stringify(utilizadorGuardado));
 
-        window.location.href = "perfil.html";
-    } else {
-        alert("Email ou palavra-passe incorretos!");
-    }
-}
+
+
